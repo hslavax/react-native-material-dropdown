@@ -144,7 +144,6 @@ export default class Dropdown extends PureComponent {
         onChangeText: PropTypes.func,
 
         renderBase: PropTypes.func,
-        renderAccessory: PropTypes.func,
 
         labelContainerStyle: (ViewPropTypes || View.propTypes).style,
         containerStyle: (ViewPropTypes || View.propTypes).style,
@@ -168,7 +167,6 @@ export default class Dropdown extends PureComponent {
         this.updateContainerRef = this.updateRef.bind(this, 'container');
         this.updateScrollRef = this.updateRef.bind(this, 'scroll');
 
-        this.renderAccessory = this.renderAccessory.bind(this);
         this.renderItem = this.renderItem.bind(this);
 
         this.keyExtractor = this.keyExtractor.bind(this);
@@ -482,7 +480,6 @@ export default class Dropdown extends PureComponent {
             renderBase,
             labelExtractor,
             dropdownOffset,
-            renderAccessory = this.renderAccessory,
         } = this.props;
 
         let index = this.selectedIndex();
@@ -497,22 +494,34 @@ export default class Dropdown extends PureComponent {
         }
 
         if ('function' === typeof renderBase) {
-            return renderBase({ ...props, title, value, renderAccessory });
+            return renderBase({ ...props, title, value });
         }
 
         title = null == title || 'string' === typeof title ?
             title :
             String(title);
+            
+        const {style, baseColor, textColor, ...restProps} = props;
 
         return (
             <TextInput
-                style={{backgroundColor: "transparent", marginBottom: 16}}
-                label=''
-                {...props}
+                style={{backgroundColor: "transparent", ...style}}
+                {...restProps}
                 value={title}
                 editable={false}
                 onChangeText={undefined}
-                renderAccessory={renderAccessory}
+                right={<TextInput.Icon color={baseColor} icon="menu-down"/>}
+                theme={{
+                    colors: {
+                        placeholder: baseColor,
+                        text: textColor,
+                    },
+                    fonts: {
+                        regular: {
+                            fontFamily: style.fontFamily,
+                        },
+                    }
+                }}
             />
         );
     }
@@ -545,19 +554,6 @@ export default class Dropdown extends PureComponent {
                 rippleSequential={rippleSequential}
                 ref={this.updateRippleRef}
             />
-        );
-    }
-
-    renderAccessory() {
-        let { baseColor: backgroundColor } = this.props;
-        let triangleStyle = { backgroundColor };
-
-        return (
-            <View style={styles.accessory}>
-                <View style={styles.triangleContainer}>
-                    <View style={[styles.triangle, triangleStyle]} />
-                </View>
-            </View>
         );
     }
 
@@ -639,7 +635,6 @@ export default class Dropdown extends PureComponent {
     render() {
         let {
             renderBase,
-            renderAccessory,
             containerStyle,
             labelContainerStyle,
             overlayStyle: overlayStyleOverrides,
