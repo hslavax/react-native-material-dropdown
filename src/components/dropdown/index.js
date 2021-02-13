@@ -516,11 +516,6 @@ export default class Dropdown extends PureComponent {
                         placeholder: baseColor,
                         text: textColor,
                     },
-                    fonts: {
-                        regular: {
-                            fontFamily: style.fontFamily,
-                        },
-                    }
                 }}
             />
         );
