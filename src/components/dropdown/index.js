@@ -505,7 +505,7 @@ export default class Dropdown extends PureComponent {
 
         return (
             <TextInput
-                style={{backgroundColor: "transparent", ...style}}
+                style={{backgroundColor: "transparent", ...style, height: 35}}
                 {...restProps}
                 value={title}
                 editable={false}
